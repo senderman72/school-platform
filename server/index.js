@@ -35,6 +35,27 @@ app.post("/users", async (req, res) => {
   res.json(user);
 });
 
+app.get("/assignments", async (req, res) => {
+  const { id } = req.body;
+  const assignments = await prisma.assignment.findMany();
+  res.json(assignments);
+});
+
+app.post("/assignments", async (req, res) => {
+  const { title, description, dueDate, creatorId } = req.body;
+  const assignment = await prisma.assignment.create({
+    data: {
+      title: title,
+      description: description,
+      dueDate: dueDate
+        ? new Date(dueDate.year, dueDate.month - 1, dueDate.day)
+        : new Date(),
+      creatorId: creatorId,
+    },
+  });
+  res.json(assignment);
+});
+
 app.listen(port, () => {
   console.log(`Express.js server is listening on port ${port}`);
 });
