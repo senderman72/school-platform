@@ -1,7 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -17,38 +16,24 @@ enum Role {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String?
-  password  String
-  Submissions Submissions[]
+  id          Int          @id @default(autoincrement())
+  email       String       @unique
+  name        String?
+  password    String
+  role        Role         @default(USER)
   assignments Assignment[]
-  role      Role     @default(USER)
 
   @@map("users")
 }
 
-model Submissions {
-  id        String      @id @default(uuid())
-  submitted Boolean
-  userId Int
-  user User @relation(fields: [userId], references: [id])
-  assignmentId String
-  assignment Assignment @relation(fields: [assignmentId], references: [id])
-
-  @@map("submitted_assignments")
-}
-
 model Assignment {
-  id        String      @id @default(uuid())
-  title String
+  id          String   @id @default(uuid())
+  title       String
   description String
-  dueDate DateTime
-  createdAt DateTime @default(now())
-  Submissions Submissions[]
-  creatorId Int
-  creator User @relation(fields: [creatorId], references: [id])
+  dueDate     DateTime
+  createdAt   DateTime @default(now())
+  studentId   Int
+  student     User     @relation(fields: [studentId], references: [id])
 
   @@map("assignments")
 }
-
